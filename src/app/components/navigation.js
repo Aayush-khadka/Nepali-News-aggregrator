@@ -12,9 +12,12 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef, onSearch }) => {
     "National",
     "Sports",
     "Business",
+    "Health",
+    "Science-Technology",
+    "Art-Culture",
   ];
 
-  const moreItems = ["Technology", "Health", "Entertainment", "Science"];
+  const moreItems = ["Editorial"];
 
   return (
     <nav className="flex justify-between items-center px-4 py-2 text-md font-serif">
