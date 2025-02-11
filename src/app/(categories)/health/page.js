@@ -25,7 +25,7 @@ export default function CategoryPage() {
     const fetchData = async () => {
       try {
         const [categoryResponse, trendingResponse] = await Promise.all([
-          fetch("http://localhost:4000/api/v1/category/politics"),
+          fetch("http://localhost:4000/api/v1/category/health"),
           fetch("http://localhost:4000/api/v1/articles/trending"),
         ]);
 
@@ -94,7 +94,7 @@ export default function CategoryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> Politics
+        <Newspaper className="text-red-600 w-6 h-6" /> Health
         <span className="text-sm font-normal text-gray-500 ml-auto">
           {articles.length} articles
         </span>

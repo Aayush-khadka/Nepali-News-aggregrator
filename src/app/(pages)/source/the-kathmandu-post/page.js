@@ -9,7 +9,7 @@ import {
   ChevronUp,
   Share2,
 } from "lucide-react";
-import Toast from "../../components/toast";
+import Toast from "../../../components/toast";
 
 export default function CategoryPage() {
   const [articles, setArticles] = useState([]);
@@ -25,7 +25,7 @@ export default function CategoryPage() {
     const fetchData = async () => {
       try {
         const [categoryResponse, trendingResponse] = await Promise.all([
-          fetch("http://localhost:4000/api/v1/category/politics"),
+          fetch("http://localhost:4000/api/v1/by-source/kathmandu-post"),
           fetch("http://localhost:4000/api/v1/articles/trending"),
         ]);
 
@@ -35,7 +35,14 @@ export default function CategoryPage() {
         const categoryData = await categoryResponse.json();
         const trendingData = await trendingResponse.json();
 
-        setArticles(categoryData.data || []);
+        setArticles(
+          Array.isArray(categoryData.data?.results)
+            ? categoryData.data.results
+            : Array.isArray(categoryData.data?.result)
+            ? categoryData.data.result
+            : []
+        );
+
         setTrendingArticles(trendingData.data || []);
       } catch (err) {
         setError(err.message);
@@ -94,7 +101,7 @@ export default function CategoryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> Politics
+        <Newspaper className="text-red-600 w-6 h-6" /> From: The Kathmandu Post
         <span className="text-sm font-normal text-gray-500 ml-auto">
           {articles.length} articles
         </span>
