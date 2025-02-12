@@ -26,10 +26,10 @@ export default function CategoryPage() {
       try {
         const [categoryResponse, trendingResponse] = await Promise.all([
           fetch(
-            "https://nepali-news-aggregrator.vercel.app/api/v1/category/science-tech"
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/category/science-tech"
           ),
           fetch(
-            "https://nepali-news-aggregrator.vercel.app/api/v1/articles/trending"
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending"
           ),
         ]);
 

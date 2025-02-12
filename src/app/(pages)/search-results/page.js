@@ -18,10 +18,10 @@ const SearchResults = () => {
         setLoading(true);
         const [searchResponse, trendingResponse] = await Promise.all([
           fetch(
-            `https://nepali-news-aggregrator.vercel.app/api/v1/search?q=${query}`
+            `https://nepali-news-aggregrator-backend.vercel.app/api/v1/search?q=${query}`
           ),
           fetch(
-            "https://nepali-news-aggregrator.vercel.app/api/v1/articles/trending"
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending"
           ),
         ]);
 
