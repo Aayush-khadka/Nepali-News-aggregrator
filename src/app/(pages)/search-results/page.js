@@ -1,11 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Clock, Share2, Newspaper, TrendingUp } from "lucide-react";
-import { isPagesAPIRouteMatch } from "next/dist/server/route-matches/pages-api-route-match";
 
-export default function SearchResults() {
+const SearchResults = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
   const [results, setResults] = useState([]);
@@ -182,5 +181,13 @@ export default function SearchResults() {
         </div>
       )}
     </div>
+  );
+};
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={<div>Loading search results...</div>}>
+      <SearchResults />
+    </Suspense>
   );
 }
