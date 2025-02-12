@@ -9,18 +9,6 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
   const router = useRouter(); // Correct usage of the useRouter hook
   const [query, setQuery] = useState("");
 
-  const navItems = [
-    "Home",
-    "Politics",
-    "World",
-    "National",
-    "Sports",
-    "Business",
-    "Health",
-    "Science-Technology",
-    "Art-Culture",
-  ];
-
   const moreItems = ["Editorial"];
 
   const handleSearchSubmit = (event) => {
@@ -34,16 +22,87 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
   return (
     <nav className="flex justify-between items-center px-4 py-2 text-md font-serif">
       <ul className="flex space-x-4 items-center">
-        {navItems.map((item) => (
-          <li key={item}>
-            <Link
-              href={`/${item.toLowerCase()}`}
-              className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
-            >
-              {item}
-            </Link>
-          </li>
-        ))}
+        {/* Home Link */}
+        <li>
+          <Link
+            href="/"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Home
+          </Link>
+        </li>
+        {/* Politics Link */}
+        <li>
+          <Link
+            href="/politics"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Politics
+          </Link>
+        </li>
+        {/* World Link */}
+        <li>
+          <Link
+            href="/world"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            World
+          </Link>
+        </li>
+        {/* National Link */}
+        <li>
+          <Link
+            href="/national"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            National
+          </Link>
+        </li>
+        {/* Sports Link */}
+        <li>
+          <Link
+            href="/sports"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Sports
+          </Link>
+        </li>
+        {/* Business Link */}
+        <li>
+          <Link
+            href="/business"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Business
+          </Link>
+        </li>
+        {/* Health Link */}
+        <li>
+          <Link
+            href="/health"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Health
+          </Link>
+        </li>
+        {/* Science-Technology Link */}
+        <li>
+          <Link
+            href="/science-technology"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Science & Technology
+          </Link>
+        </li>
+        {/* Art-Culture Link */}
+        <li>
+          <Link
+            href="/art-culture"
+            className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block"
+          >
+            Art & Culture
+          </Link>
+        </li>
 
         {/* More Dropdown */}
         <li className="relative" ref={moreRef}>
