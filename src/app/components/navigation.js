@@ -122,6 +122,15 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 bg-white z-50 pt-16">
           <div className="h-full overflow-y-auto pb-20">
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-xl"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-6 w-6" />
+            </button>
+
             {/* Mobile Search */}
             <div className="px-4 py-2 border-b border-gray-200">
               <form onSubmit={handleSearchSubmit} className="flex items-center">
@@ -219,7 +228,9 @@ export default function Navbar() {
       <header className="w-full bg-white text-black border-b border-gray-300 shadow-sm">
         {/* Title Section */}
         <div className="text-center py-4 border-b border-gray-300">
-          <h1 className="text-3xl font-serif">The Samachar</h1>
+          <Link href="/" className="text-3xl font-serif">
+            The Samachar
+          </Link>
         </div>
 
         {/* Navigation Bar */}

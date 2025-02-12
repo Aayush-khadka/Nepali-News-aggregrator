@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useEffect, useCallback } from "react";
-import dynamic from "next/dynamic";
+import React, { useState, useEffect } from "react";
 import {
   Clock,
   User,
@@ -10,9 +9,7 @@ import {
   ChevronUp,
   Share2,
 } from "lucide-react";
-
-// Dynamically import Toast to reduce initial load
-const Toast = dynamic(() => import("../../components/toast"), { ssr: false });
+import Toast from "../../components/toast";
 
 export default function CategoryPage() {
   const [articles, setArticles] = useState([]);
@@ -20,49 +17,47 @@ export default function CategoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [visibleArticles, setVisibleArticles] = useState(6);
+  const [visibleArticles, setVisibleArticles] = useState(6); // Initial articles displayed
   const [showToast, setShowToast] = useState(false);
 
-  // Fetch data
-  const fetchData = useCallback(async () => {
-    try {
-      const [categoryResponse, trendingResponse] = await Promise.all([
-        fetch(
-          "https://nepali-news-aggregrator-backend.vercel.app/api/v1/category/art-culture"
-        ),
-        fetch(
-          "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending"
-        ),
-      ]);
-
-      if (!categoryResponse.ok || !trendingResponse.ok)
-        throw new Error("Failed to fetch data");
-
-      const [categoryData, trendingData] = await Promise.all([
-        categoryResponse.json(),
-        trendingResponse.json(),
-      ]);
-
-      setArticles(categoryData.data || []);
-      setTrendingArticles(trendingData.data || []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
+  // Fetch data and handle scrolling
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoryResponse, trendingResponse] = await Promise.all([
+          fetch(
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/category/art-culture"
+          ),
+          fetch(
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending"
+          ),
+        ]);
+
+        if (!categoryResponse.ok || !trendingResponse.ok)
+          throw new Error("Failed to fetch data");
+
+        const categoryData = await categoryResponse.json();
+        const trendingData = await trendingResponse.json();
+
+        setArticles(categoryData.data || []);
+        setTrendingArticles(trendingData.data || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchData();
 
     const handleScroll = () => setShowScrollTop(window.scrollY > 300);
     window.addEventListener("scroll", handleScroll);
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [fetchData]);
+  }, []);
 
   // Share handler
-  const handleShare = useCallback(() => {
+  const handleShare = () => {
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
@@ -70,25 +65,21 @@ export default function CategoryPage() {
         setTimeout(() => setShowToast(false), 3000);
       })
       .catch((err) => console.error("Failed to copy: ", err));
-  }, []);
+  };
 
   // Scroll to top
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   // Load more articles
-  const loadMoreArticles = useCallback(() => {
-    setVisibleArticles((prev) => prev + 6);
-  }, []);
+  const loadMoreArticles = () => setVisibleArticles((prev) => prev + 6);
 
-  // Generate slug
-  const generateSlug = useCallback((text) => {
+  // Example Usage
+  function generateSlug(text) {
     return text
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^\w-]/g, "");
-  }, []);
+      .toLowerCase() // Convert to lowercase
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/[^\w-]/g, ""); // Remove non-word characters except hyphens
+  }
 
   // Error and loading states
   if (isLoading)
@@ -97,7 +88,6 @@ export default function CategoryPage() {
         <div className="w-16 h-16 border-t-4 border-red-600 border-solid rounded-full animate-spin"></div>
       </div>
     );
-
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -108,7 +98,7 @@ export default function CategoryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> Art And Culture
+        <Newspaper className="text-red-600 w-6 h-6" /> Art and Culture
         <span className="text-sm font-normal text-gray-500 ml-auto">
           {articles.length} articles
         </span>
@@ -121,20 +111,19 @@ export default function CategoryPage() {
               key={article._id}
               className="group hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200"
             >
-              <div className="flex space-x-4">
-                <div className="w-48 h-32 overflow-hidden">
+              <div className="flex flex-col sm:flex-row space-x-0 sm:space-x-4">
+                <div className="w-full sm:w-48 h-32 overflow-hidden">
                   <img
                     src={article.articleImage}
                     alt="Article image"
                     className="object-cover w-full h-full"
-                    loading="lazy"
                     onError={(e) =>
                       (e.target.src =
                         "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
                     }
                   />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 mt-4 sm:mt-0">
                   <Link href={`/article/${article._id}`}>
                     <h2 className="text-xl font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
                       {article.title}
@@ -144,16 +133,20 @@ export default function CategoryPage() {
                     {article.summary}
                   </p>
                   <div className="flex items-center text-sm text-gray-500 mt-2 justify-between">
+                    {/* Left side: Published time */}
                     <div className="flex items-center">
                       <Clock className="w-4 h-4 mr-2" />
                       <span>{article.publishedTime}</span>
                     </div>
+
+                    {/* Right side: Source and Share */}
                     <div className="flex items-center gap-4">
                       <Link href={`/source/${generateSlug(article.source)}`}>
                         <span className="text-xs bg-gray-100 px-2 py-1 rounded">
                           {article.source}
                         </span>
                       </Link>
+
                       <button
                         onClick={handleShare}
                         className="flex items-center text-gray-500 hover:text-blue-800 transition-colors"
@@ -176,8 +169,8 @@ export default function CategoryPage() {
           )}
         </div>
 
-        <aside className="md:col-span-1 relative">
-          <div className="bg-gray-50 p-4 rounded-lg absolute top-0">
+        <aside className="md:col-span-1">
+          <div className="bg-gray-50 p-4 rounded-lg md:sticky md:top-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
               <TrendingUp className="mr-2 text-red-600" /> Trending
             </h3>

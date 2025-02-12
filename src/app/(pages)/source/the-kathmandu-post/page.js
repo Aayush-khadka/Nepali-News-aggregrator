@@ -17,7 +17,7 @@ export default function CategoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [visibleArticles, setVisibleArticles] = useState(6); // Initial articles displayed
+  const [visibleArticles, setVisibleArticles] = useState(6); // Initial articles
   const [showToast, setShowToast] = useState(false);
 
   // Fetch data and handle scrolling
@@ -104,9 +104,10 @@ export default function CategoryPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> From: The Kathmandu Post
-        <span className="text-sm font-normal text-gray-500 ml-auto">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex flex-col sm:flex-row items-center gap-2">
+        <Newspaper className="text-red-600 w-6 h-6" />
+        <span>From: The Kathmandu Post</span>
+        <span className="text-sm font-normal text-gray-500 ml-auto mt-1 sm:mt-0">
           {articles.length} articles
         </span>
       </h1>
@@ -118,8 +119,8 @@ export default function CategoryPage() {
               key={article._id}
               className="group hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200"
             >
-              <div className="flex space-x-4">
-                <div className="w-48 h-32 overflow-hidden">
+              <div className="flex flex-col sm:flex-row space-x-4">
+                <div className="w-full sm:w-48 h-32 overflow-hidden">
                   <img
                     src={
                       article.articleImage ||
@@ -138,9 +139,9 @@ export default function CategoryPage() {
                   <p className="text-gray-600 mt-2 line-clamp-2 text-sm">
                     {article.summary}
                   </p>
-                  <div className="flex items-center text-sm text-gray-500 mt-2 justify-between">
+                  <div className="flex flex-col md:flex-row items-start md:items-center text-sm text-gray-500 mt-2 justify-between">
                     {/* Left side: Published time */}
-                    <div className="flex items-center">
+                    <div className="flex items-center mb-2 md:mb-0">
                       <Clock className="w-4 h-4 mr-2" />
                       <span>{article.publishedTime}</span>
                     </div>
@@ -175,8 +176,8 @@ export default function CategoryPage() {
           )}
         </div>
 
-        <aside className="md:col-span-1 relative">
-          <div className="bg-gray-50 p-4 rounded-lg absolute top-0">
+        <aside className="md:col-span-1">
+          <div className="bg-gray-50 p-4 rounded-lg sticky top-0">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
               <TrendingUp className="mr-2 text-red-600" /> Trending
             </h3>

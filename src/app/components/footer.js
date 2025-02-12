@@ -142,7 +142,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#F3F4F6] text-black py-8 border-t border-gray-300">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <GeneralLinks />
           <NewsCategories />
           <LegalLinks />

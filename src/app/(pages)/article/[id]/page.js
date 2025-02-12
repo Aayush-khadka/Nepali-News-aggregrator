@@ -106,7 +106,7 @@ export default function NewsStyleArticlePage({ params }) {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             {article.title}
           </h1>
 
@@ -140,7 +140,7 @@ export default function NewsStyleArticlePage({ params }) {
               <img
                 src={article.articleImage}
                 alt="Article image"
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-auto"
                 onError={(e) =>
                   (e.target.src =
                     "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
@@ -168,7 +168,7 @@ export default function NewsStyleArticlePage({ params }) {
           </div>
 
           {/* Footer */}
-          <footer className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+          <footer className="mt-8 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2">
               <LinkIcon className="w-4 h-4 text-gray-500" />
               <a
@@ -180,7 +180,7 @@ export default function NewsStyleArticlePage({ params }) {
               </a>
             </div>
             {article.tag?.length > 0 && (
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 mt-2 md:mt-0">
                 {article.tag.map((tag, index) => (
                   <span
                     key={index}
@@ -195,8 +195,8 @@ export default function NewsStyleArticlePage({ params }) {
         </div>
 
         {/* Sidebar: Trending Articles */}
-        <aside className="md:col-span-1 relative">
-          <div className="bg-gray-50 p-4 rounded-lg absolute top-0">
+        <aside className="md:col-span-1">
+          <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
               <TrendingUp className="mr-2 text-red-600" /> Trending
             </h3>

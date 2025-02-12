@@ -98,7 +98,7 @@ export default function CategoryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> Business
+        <Newspaper className="text-red-600 w-6 h-6" /> Business and Money
         <span className="text-sm font-normal text-gray-500 ml-auto">
           {articles.length} articles
         </span>
@@ -111,8 +111,8 @@ export default function CategoryPage() {
               key={article._id}
               className="group hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200"
             >
-              <div className="flex space-x-4">
-                <div className="w-48 h-32 overflow-hidden">
+              <div className="flex flex-col sm:flex-row space-x-0 sm:space-x-4">
+                <div className="w-full sm:w-48 h-32 overflow-hidden">
                   <img
                     src={article.articleImage}
                     alt="Article image"
@@ -123,7 +123,7 @@ export default function CategoryPage() {
                     }
                   />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 mt-4 sm:mt-0">
                   <Link href={`/article/${article._id}`}>
                     <h2 className="text-xl font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
                       {article.title}
@@ -169,8 +169,8 @@ export default function CategoryPage() {
           )}
         </div>
 
-        <aside className="md:col-span-1 relative">
-          <div className="bg-gray-50 p-4 rounded-lg absolute top-0">
+        <aside className="md:col-span-1">
+          <div className="bg-gray-50 p-4 rounded-lg md:sticky md:top-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
               <TrendingUp className="mr-2 text-red-600" /> Trending
             </h3>

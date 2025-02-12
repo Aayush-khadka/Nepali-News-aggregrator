@@ -10,7 +10,8 @@ const SearchResults = () => {
   const [results, setResults] = useState([]);
   const [trendingArticles, setTrendingArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [visibleResults, setVisibleResults] = useState(6); // Show 6 results initially
+  const [visibleResults, setVisibleResults] = useState(6); // Show 6 results
+  const [showToast, setShowToast] = useState(false); // State for toast
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -57,6 +58,7 @@ const SearchResults = () => {
       .replace(/\s+/g, "-") // Replace spaces with hyphens
       .replace(/[^\w-]/g, ""); // Remove non-word characters except hyphens
   }
+
   const handleShare = () => {
     navigator.clipboard
       .writeText(window.location.href)
@@ -66,14 +68,17 @@ const SearchResults = () => {
       })
       .catch((err) => console.error("Failed to copy: ", err));
   };
+
   // Load more results
   const loadMoreResults = () => setVisibleResults((prev) => prev + 6);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> Search Results for "
-        {query}"
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+        <Newspaper className="text-red-600 w-6 h-6" />
+        <span>
+          Search Results for "<span className="font-semibold">{query}</span>"
+        </span>
       </h1>
 
       {loading ? (
@@ -90,19 +95,17 @@ const SearchResults = () => {
                 key={item._id}
                 className="group hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200"
               >
-                <div className="flex space-x-4">
-                  <div className="w-48 h-32 overflow-hidden">
-                    <div className="w-48 h-32 overflow-hidden">
-                      <img
-                        src={item.articleImage || null}
-                        alt="Article image"
-                        className="object-cover w-full h-full"
-                        onError={(e) =>
-                          (e.target.src =
-                            "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
-                        }
-                      />
-                    </div>
+                <div className="flex flex-col sm:flex-row space-x-4">
+                  <div className="w-full sm:w-48 h-32 overflow-hidden">
+                    <img
+                      src={item.articleImage || null}
+                      alt="Article image"
+                      className="object-cover w-full h-full"
+                      onError={(e) =>
+                        (e.target.src =
+                          "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
+                      }
+                    />
                   </div>
                   <div className="flex-1">
                     <Link href={`/article/${item._id}`}>
@@ -113,9 +116,9 @@ const SearchResults = () => {
                     <p className="text-gray-600 mt-2 line-clamp-2 text-sm">
                       {item.summary}
                     </p>
-                    <div className="flex items-center text-sm text-gray-500 mt-2 justify-between">
+                    <div className="flex flex-col md:flex-row items-start md:items-center text-sm text-gray-500 mt-2 justify-between">
                       {/* Left side: Published time */}
-                      <div className="flex items-center">
+                      <div className="flex items-center mb-2 md:mb-0">
                         <Clock className="w-4 h-4 mr-2" />
                         <span>{item.publishedTime}</span>
                       </div>
