@@ -17,7 +17,7 @@ export const metadata = {
   metadataBase: new URL("https://thesamachar.vercel.app"),
   title: "The Samachar - Nepali News Aggregator",
   description:
-    "Stay updated with the latest Nepali news from leading sources. The Samachar aggregates news from Kantipur, The Kathmandu Post, The Rising Nepal, and more. Get breaking news, politics, business, sports, and cultural insights from Nepal.",
+    "Stay updated on Nepal with The Samachar, your source for breaking news, politics, business, sports, and cultural insights.",
   keywords: [
     "Nepali news",
     "Nepal news",
@@ -35,7 +35,7 @@ export const metadata = {
     "नेपाली समाचार",
   ],
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.ico",
     apple: "/apple-touch-icon.png",
     other: {
       rel: "apple-touch-icon-precomposed",
@@ -45,7 +45,7 @@ export const metadata = {
   openGraph: {
     title: "The Samachar - Nepali News Aggregator",
     description:
-      "Stay updated with the latest Nepali news from leading sources. The Samachar aggregates news from Kantipur, The Kathmandu Post, The Rising Nepal, and more. Get breaking news, politics, business, sports, and cultural insights from Nepal.",
+      "Stay updated on Nepal with The Samachar, your source for breaking news, politics, business, sports, and cultural insights.",
     siteName: "The Samachar",
     images: [
       {
