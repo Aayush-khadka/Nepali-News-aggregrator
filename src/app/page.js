@@ -273,7 +273,7 @@ export default function HomePage() {
               <category.icon className="text-red-600" />
               {category.name}
             </h2>
-            <Link href={`/category/${category.slug}`}>
+            <Link href={`/${category.slug}`}>
               <span className="text-red-600 hover:text-red-700 font-medium text-lg">
                 View All →
               </span>
