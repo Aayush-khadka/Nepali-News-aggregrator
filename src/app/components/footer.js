@@ -23,22 +23,6 @@ const GeneralLinks = () => (
           About
         </Link>
       </li>
-      <li>
-        <Link
-          href="/privacy"
-          className="hover:text-red-600 transition duration-200"
-        >
-          Privacy Policy
-        </Link>
-      </li>
-      <li>
-        <Link
-          href="/terms"
-          className="hover:text-red-600 transition duration-200"
-        >
-          Terms of Service
-        </Link>
-      </li>
     </ul>
   </div>
 );
