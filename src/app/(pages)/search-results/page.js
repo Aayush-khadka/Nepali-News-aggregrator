@@ -1,72 +1,3 @@
-// "use client";
-// import { useState, useEffect } from "react";
-// import { useSearchParams } from "next/navigation";
-
-// export default function SearchResults() {
-//   const searchParams = useSearchParams();
-//   const query = searchParams.get("q");
-//   const [results, setResults] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     if (!query) return;
-
-//     console.log("Query parameter:", query); // Debugging
-
-//     const fetchResults = async () => {
-//       try {
-//         setLoading(true);
-//         const response = await fetch(
-//           `http://localhost:4000/api/v1/search?q=${query}`
-//         );
-
-//         console.log(query);
-
-//         // Log status and response body
-//         console.log("Response status:", response.status);
-//         const responseBody = await response.text();
-//         console.log("Response body:", responseBody);
-
-//         if (!response.ok) {
-//           throw new Error(
-//             `Failed to fetch results. Status: ${response.status}`
-//           );
-//         }
-
-//         try {
-//           const jsonData = JSON.parse(responseBody);
-//           setResults(jsonData.data || []); // Default to an empty array if no data
-//         } catch (parseError) {
-//           throw new Error("Failed to parse response body as JSON");
-//         }
-//       } catch (error) {
-//         console.error("Error fetching search results:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchResults();
-//   }, [query]);
-
-//   return (
-//     <div>
-//       <h1>Search Results for "{query}"</h1>
-//       {loading ? (
-//         <p>Loading...</p>
-//       ) : results.length > 0 ? (
-//         <ul>
-//           {results.map((item) => (
-//             <li key={item._id}>{item.title}</li> // FIX: Use `_id` as key
-//           ))}
-//         </ul>
-//       ) : (
-//         <p>No results found.</p>
-//       )}
-//     </div>
-//   );
-// }
-
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -87,8 +18,12 @@ export default function SearchResults() {
       try {
         setLoading(true);
         const [searchResponse, trendingResponse] = await Promise.all([
-          fetch(`http://localhost:4000/api/v1/search?q=${query}`),
-          fetch("http://localhost:4000/api/v1/articles/trending"),
+          fetch(
+            `https://nepali-news-aggregrator.vercel.app/api/v1/search?q=${query}`
+          ),
+          fetch(
+            "https://nepali-news-aggregrator.vercel.app/api/v1/articles/trending"
+          ),
         ]);
 
         const searchData = await searchResponse.text();

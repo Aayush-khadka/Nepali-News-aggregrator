@@ -25,8 +25,12 @@ export default function CategoryPage() {
     const fetchData = async () => {
       try {
         const [categoryResponse, trendingResponse] = await Promise.all([
-          fetch("http://localhost:4000/api/v1/category/sports"),
-          fetch("http://localhost:4000/api/v1/articles/trending"),
+          fetch(
+            "https://nepali-news-aggregrator.vercel.app/api/v1/category/sports"
+          ),
+          fetch(
+            "https://nepali-news-aggregrator.vercel.app/api/v1/articles/trending"
+          ),
         ]);
 
         if (!categoryResponse.ok || !trendingResponse.ok)

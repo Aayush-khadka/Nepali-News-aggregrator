@@ -29,13 +29,13 @@ export default function NewsStyleArticlePage({ params }) {
     async function fetchData() {
       try {
         const articleResponse = await fetch(
-          `http://localhost:4000/api/v1/articles/get-article/${id}`
+          `https://nepali-news-aggregrator.vercel.app/api/v1/articles/get-article/${id}`
         );
         const trendingResponse = await fetch(
-          `http://localhost:4000/api/v1/articles/trending`
+          `https://nepali-news-aggregrator.vercel.app/api/v1/articles/trending`
         );
         const relatedResponse = await fetch(
-          `http://localhost:4000/api/v1/articles/get-latest-articles`
+          `https://nepali-news-aggregrator.vercel.app/api/v1/articles/get-latest-articles`
         );
 
         if (
