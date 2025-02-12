@@ -110,12 +110,13 @@ export default function CategoryPage() {
               <div className="flex space-x-4">
                 <div className="w-48 h-32 overflow-hidden">
                   <img
-                    src={
-                      article.articleImage ||
-                      "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg"
-                    }
-                    alt="Failed to load image"
+                    src={article.articleImage}
+                    alt="Article image"
                     className="object-cover w-full h-full"
+                    onError={(e) =>
+                      (e.target.src =
+                        "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
+                    }
                   />
                 </div>
                 <div className="flex-1">

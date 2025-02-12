@@ -139,8 +139,12 @@ export default function NewsStyleArticlePage({ params }) {
             <div className="mb-6">
               <img
                 src={article.articleImage}
-                alt={article.title}
-                className="w-full h-96 object-cover rounded-lg"
+                alt="Article image"
+                className="object-cover w-full h-full"
+                onError={(e) =>
+                  (e.target.src =
+                    "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
+                }
               />
             </div>
           )}

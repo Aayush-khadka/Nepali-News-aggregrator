@@ -1,10 +1,14 @@
-"use client";
+"use client"; // Ensure this component is client-side
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation"; // Correct usage of the useRouter hook
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa"; // Importing the search icon from react-icons
 
-const NavBarContent = ({ moreOpen, setMoreOpen, moreRef, onSearch }) => {
+const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
+  const router = useRouter(); // Correct usage of the useRouter hook
+  const [query, setQuery] = useState("");
+
   const navItems = [
     "Home",
     "Politics",
@@ -18,6 +22,14 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef, onSearch }) => {
   ];
 
   const moreItems = ["Editorial"];
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    if (query) {
+      router.push(`/search-results?q=${query}`); // Use router.push correctly for redirect
+    }
+  };
+  console.log(query);
 
   return (
     <nav className="flex justify-between items-center px-4 py-2 text-md font-serif">
@@ -62,12 +74,14 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef, onSearch }) => {
       {/* Search Bar and Date Section */}
       <div className="flex items-center space-x-4">
         {/* Search Bar */}
-        <form onSubmit={onSearch} className="flex items-center">
+        <form onSubmit={handleSearchSubmit} className="flex items-center">
           <div className="relative">
             <input
               type="text"
               placeholder="Search..."
               className="border border-gray-300 rounded-md pl-10 pr-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
             <FaSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
@@ -114,13 +128,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    const query = event.target.elements[0].value;
-    console.log("Search query:", query);
-    // Implement search functionality here
-  };
-
   return (
     <div>
       {/* Main Header */}
@@ -135,7 +142,6 @@ export default function Navbar() {
           moreOpen={moreOpen}
           setMoreOpen={setMoreOpen}
           moreRef={moreRef}
-          onSearch={handleSearch}
         />
       </header>
 
@@ -146,7 +152,6 @@ export default function Navbar() {
             moreOpen={moreOpen}
             setMoreOpen={setMoreOpen}
             moreRef={moreRef}
-            onSearch={handleSearch}
           />
         </div>
       )}
