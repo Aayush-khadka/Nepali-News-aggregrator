@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Clock,
-  User,
   TrendingUp,
   Newspaper,
   ChevronUp,
   Share2,
+  Search,
+  Filter,
 } from "lucide-react";
 import Toast from "../../components/toast";
 
@@ -17,10 +18,28 @@ export default function CategoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [visibleArticles, setVisibleArticles] = useState(6); // Initial articles displayed
+  const [visibleArticles, setVisibleArticles] = useState(6);
   const [showToast, setShowToast] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSource, setSelectedSource] = useState("all");
 
-  // Fetch data and handle scrolling
+  // Memoize filtered articles
+  const filteredArticles = useMemo(() => {
+    return articles.filter((article) => {
+      const matchesSearch =
+        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.summary.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSource =
+        selectedSource === "all" || article.source === selectedSource;
+      return matchesSearch && matchesSource;
+    });
+  }, [articles, searchTerm, selectedSource]);
+
+  // Get unique sources for filter
+  const sources = useMemo(() => {
+    return ["all", ...new Set(articles.map((article) => article.source))];
+  }, [articles]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,14 +71,13 @@ export default function CategoryPage() {
 
     const handleScroll = () => setShowScrollTop(window.scrollY > 300);
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Share handler
-  const handleShare = () => {
+  const handleShare = (e, url = window.location.href) => {
+    e.stopPropagation();
     navigator.clipboard
-      .writeText(window.location.href)
+      .writeText(url)
       .then(() => {
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
@@ -67,27 +85,23 @@ export default function CategoryPage() {
       .catch((err) => console.error("Failed to copy: ", err));
   };
 
-  // Scroll to top
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
-  // Load more articles
   const loadMoreArticles = () => setVisibleArticles((prev) => prev + 6);
 
-  // Example Usage
   function generateSlug(text) {
     return text
-      .toLowerCase() // Convert to lowercase
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/[^\w-]/g, ""); // Remove non-word characters except hyphens
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]/g, "");
   }
 
-  // Error and loading states
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-16 h-16 border-t-4 border-red-600 border-solid rounded-full animate-spin"></div>
       </div>
     );
+
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -96,60 +110,81 @@ export default function CategoryPage() {
     );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center gap-2">
-        <Newspaper className="text-red-600 w-6 h-6" /> World
-        <span className="text-sm font-normal text-gray-500 ml-auto">
-          {articles.length} articles
-        </span>
-      </h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white min-h-screen">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-3">
+        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2 mb-4 sm:mb-0">
+          <Newspaper className="text-red-600 w-6 h-6" /> World
+          <span className="text-sm font-normal text-gray-500 ml-2">
+            {filteredArticles.length} articles
+          </span>
+        </h1>
+
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <select
+            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-red-400  transition duration-200 ease-in-out"
+            value={selectedSource}
+            onChange={(e) => setSelectedSource(e.target.value)}
+          >
+            {sources.map((source) => (
+              <option key={source} value={source} className="text-gray-800">
+                {source === "all" ? "All Sources" : source}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-6">
-          {articles.slice(0, visibleArticles).map((article) => (
+          {filteredArticles.slice(0, visibleArticles).map((article) => (
             <div
               key={article._id}
               className="group hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200"
             >
-              <div className="flex flex-col sm:flex-row space-x-0 sm:space-x-4">
-                <div className="w-full sm:w-48 h-32 overflow-hidden">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-full sm:w-48 h-32 overflow-hidden rounded-lg">
                   <img
                     src={article.articleImage}
-                    alt="Article image"
-                    className="object-cover w-full h-full"
+                    alt={article.title}
+                    className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-200"
                     onError={(e) =>
                       (e.target.src =
                         "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg")
                     }
                   />
                 </div>
-                <div className="flex-1 mt-4 sm:mt-0">
+                <div className="flex-1">
                   <Link href={`/article/${article._id}`}>
-                    <h2 className="text-xl font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
+                    <h2 className="text-xl font-semibold text-gray-800 group-hover:text-red-600 transition-colors line-clamp-2">
                       {article.title}
                     </h2>
                   </Link>
                   <p className="text-gray-600 mt-2 line-clamp-2 text-sm">
                     {article.summary}
                   </p>
-                  <div className="flex items-center text-sm text-gray-500 mt-2 justify-between">
-                    {/* Left side: Published time */}
-                    <div className="flex items-center">
+                  <div className="flex flex-wrap items-center text-sm text-gray-500 mt-2 gap-2 justify-between">
+                    <div className="flex items-center whitespace-nowrap">
                       <Clock className="w-4 h-4 mr-2" />
-                      <span>{article.publishedTime}</span>
+                      <span
+                        className="text-xs truncate max-w-[80px] sm:max-w-none"
+                        title={article.publishedTime}
+                      >
+                        {article.publishedTime}
+                      </span>
                     </div>
 
-                    {/* Right side: Source and Share */}
-                    <div className="flex items-center gap-4">
-                      <Link href={`/source/${generateSlug(article.source)}`}>
-                        <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                          {article.source}
-                        </span>
+                    <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+                      <Link
+                        href={`/source/${generateSlug(article.source)}`}
+                        className="text-xs bg-gray-100 px-2 py-1 rounded max-w-[150px] overflow-hidden whitespace-nowrap"
+                        title={article.source}
+                      >
+                        {article.source}
                       </Link>
 
                       <button
-                        onClick={handleShare}
-                        className="flex items-center text-gray-500 hover:text-blue-800 transition-colors"
+                        onClick={(e) => handleShare(e, article.sourceURL)}
+                        className="flex items-center text-gray-500 hover:text-blue-800 transition-colors whitespace-nowrap text-xs"
                       >
                         <Share2 className="w-4 h-4 mr-1" /> Share
                       </button>
@@ -159,10 +194,10 @@ export default function CategoryPage() {
               </div>
             </div>
           ))}
-          {visibleArticles < articles.length && (
+          {visibleArticles < filteredArticles.length && (
             <button
               onClick={loadMoreArticles}
-              className="w-full bg-red-500 text-black py-2 rounded-lg hover:bg-red-700 transition"
+              className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
             >
               Load More
             </button>
@@ -185,11 +220,18 @@ export default function CategoryPage() {
                     <h4 className="text-sm font-semibold text-gray-800 group-hover:text-red-600 line-clamp-2">
                       {article.title}
                     </h4>
-                    <div className="flex items-center text-xs text-gray-500 mt-2">
-                      <span className="truncate">{article.source}</span>
-                      <span className="ml-auto bg-blue-50 text-blue-800 px-2 py-1 rounded-full text-xs">
-                        {article.tag[0]}
+                    <div className="flex items-center text-xs text-gray-500 mt-2 justify-between">
+                      <span
+                        className="truncate max-w-[150px]"
+                        title={article.source}
+                      >
+                        {article.source}
                       </span>
+                      {article.tag && article.tag[0] && (
+                        <span className="ml-2 bg-blue-50 text-blue-800 px-2 py-1 rounded-full text-xs truncate max-w-[100px]">
+                          {article.tag[0]}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>
@@ -203,6 +245,7 @@ export default function CategoryPage() {
         <button
           onClick={scrollToTop}
           className="fixed bottom-8 right-8 bg-red-600 text-white p-3 rounded-full shadow-lg hover:bg-red-700 transition-colors"
+          aria-label="Scroll to top"
         >
           <ChevronUp className="w-6 h-6" />
         </button>

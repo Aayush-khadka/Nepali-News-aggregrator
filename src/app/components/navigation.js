@@ -3,16 +3,33 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaSearch } from "react-icons/fa";
-import { Menu, X } from "lucide-react";
+import {
+  Search,
+  Menu,
+  X,
+  Calendar,
+  ChevronRight,
+  ChevronDown,
+} from "lucide-react";
 
 const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
   const navItems = [
-    { name: "Home", path: "/" },
     { name: "Politics", path: "/politics" },
     { name: "World", path: "/world" },
     { name: "National", path: "/national" },
@@ -23,66 +40,69 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
     { name: "Art & Culture", path: "/art-culture" },
   ];
 
-  const moreItems = ["Editorial"];
+  const moreItems = [
+    { name: "Editorial", path: "/editorial" },
+    // Future items can be added here
+  ];
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    if (query) {
-      router.push(`/search-results?q=${query}`);
+    if (query.trim()) {
+      router.push(`/search-results?q=${query.trim()}`);
       setIsMobileMenuOpen(false);
     }
   };
 
   return (
-    <nav className="relative px-4 py-2 font-serif">
-      <div className="flex justify-between items-center">
-        {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden p-2 hover:bg-gray-200 rounded-md"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </button>
+    <nav className="relative px-4 py-2 font-serif bg-white">
+      <div className="flex justify-between items-center max-w-7xl mx-auto">
+        {/* Logo for Mobile */}
+        <div className="lg:hidden">
+          {/* <Link href="/" className="text-xl font-bold text-gray-900">
+            The Samachar
+          </Link> */}
+        </div>
 
         {/* Desktop Navigation */}
-        <ul className="hidden lg:flex space-x-4 items-center">
+        <ul className="hidden lg:flex space-x-1 items-center">
           {navItems.map((item) => (
             <li key={item.path}>
               <Link
                 href={item.path}
-                className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block text-sm"
+                className="px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors text-sm font-medium whitespace-nowrap"
               >
                 {item.name}
               </Link>
             </li>
           ))}
-          {/* More Dropdown - Desktop */}
+          {/* More Dropdown */}
           <li className="relative" ref={moreRef}>
             <button
-              className="hover:text-gray-600 transition px-2 py-1 rounded hover:bg-gray-200 inline-block text-sm"
+              className="px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors text-sm font-medium inline-flex items-center gap-1"
               onClick={() => setMoreOpen(!moreOpen)}
               aria-expanded={moreOpen}
             >
               More
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  moreOpen ? "rotate-180" : ""
+                }`}
+              />
             </button>
             {moreOpen && (
-              <ul className="absolute left-0 mt-2 bg-white border border-gray-300 shadow-lg rounded-md p-2 w-40 z-50">
+              <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg py-1 w-48 z-50">
                 {moreItems.map((item) => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase()}`}
-                      className="block px-4 py-2 hover:bg-gray-200 rounded-md transition text-sm"
-                    >
-                      {item}
-                    </Link>
-                  </li>
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-red-50 group transition-colors"
+                    onClick={() => setMoreOpen(false)}
+                  >
+                    <span>{item.name}</span>
+                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all" />
+                  </Link>
                 ))}
-              </ul>
+              </div>
             )}
           </li>
         </ul>
@@ -97,96 +117,112 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search..."
-                className="border border-gray-300 rounded-md pl-10 pr-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                placeholder="Search news..."
+                className="w-[220px] border border-gray-200 rounded-full pl-10 pr-4 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all placeholder:text-gray-400"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <FaSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             </div>
           </form>
 
-          {/* Date - Hide on mobile */}
-          <div className="hidden md:block text-sm text-gray-800 whitespace-nowrap">
-            {new Date().toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              weekday: "long",
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 bg-white z-50 pt-16">
-          <div className="h-full overflow-y-auto pb-20">
-            {/* Close Button */}
-            <button
-              className="absolute top-4 right-4 text-xl"
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <X className="h-6 w-6" />
-            </button>
-
-            {/* Mobile Search */}
-            <div className="px-4 py-2 border-b border-gray-200">
-              <form onSubmit={handleSearchSubmit} className="flex items-center">
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    className="w-full border border-gray-300 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                </div>
-              </form>
-            </div>
-
-            {/* Mobile Navigation Items */}
-            <ul className="px-4 py-2">
-              {navItems.map((item) => (
-                <li
-                  key={item.path}
-                  className="border-b border-gray-100 last:border-0"
-                >
-                  <Link
-                    href={item.path}
-                    className="block py-3 hover:bg-gray-50 transition"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-              {moreItems.map((item) => (
-                <li
-                  key={item}
-                  className="border-b border-gray-100 last:border-0"
-                >
-                  <Link
-                    href={`/${item.toLowerCase()}`}
-                    className="block py-3 hover:bg-gray-50 transition"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            {/* Mobile Date */}
-            <div className="px-4 py-3 text-sm text-gray-600 border-t border-gray-200 bg-gray-50">
+          {/* Date Display */}
+          <div className="hidden md:flex items-center text-sm text-gray-600 bg-red-50 px-4 py-1.5 rounded-full">
+            <Calendar className="w-4 h-4 mr-2 text-red-600" />
+            <span>
               {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-                weekday: "long",
               })}
+            </span>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 hover:bg-red-50 rounded-md text-red-600 transition-colors"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+          {/* Mobile Menu Content */}
+          <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white shadow-xl">
+            {/* Mobile Menu Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 hover:bg-red-50 rounded-md text-red-600 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="h-full overflow-y-auto pb-20">
+              {/* Mobile Search */}
+              <div className="px-4 py-3 border-b border-gray-100">
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className="flex items-center"
+                >
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      placeholder="Search news..."
+                      className="w-full border border-gray-200 rounded-full pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  </div>
+                </form>
+              </div>
+
+              {/* Mobile Navigation Items */}
+              <ul className="px-4 py-2">
+                {[...navItems, ...moreItems].map((item) => (
+                  <li
+                    key={item.path}
+                    className="border-b border-gray-50 last:border-0"
+                  >
+                    <Link
+                      href={item.path}
+                      className="flex items-center justify-between py-3 hover:bg-red-50 px-2 rounded-md group transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <span className="text-gray-700 group-hover:text-red-600">
+                        {item.name}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-red-600 transform group-hover:translate-x-1 transition-all" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Mobile Date Display */}
+              <div className="px-6 py-4 bg-red-50/50 text-sm text-gray-600 flex items-center mt-4">
+                <Calendar className="w-4 h-4 mr-2 text-red-600" />
+                <span>
+                  {new Date().toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -207,28 +243,29 @@ export default function Navbar() {
       }
     };
 
+    const handleScroll = () => {
+      setShowScrollNav(window.pageYOffset > 100);
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollNav(window.pageYOffset > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div>
       {/* Main Header */}
-      <header className="w-full bg-white text-black border-b border-gray-300 shadow-sm">
+      <header className="w-full bg-white text-black border-b border-gray-200">
         {/* Title Section */}
-        <div className="text-center py-4 border-b border-gray-300">
-          <Link href="/" className="text-3xl font-serif">
+        <div className="text-center py-4 sm:py-6 border-b border-gray-100">
+          <Link
+            href="/"
+            className="text-3xl sm:text-4xl font-serif font-bold hover:text-red-600 transition-colors tracking-tight"
+          >
             The Samachar
           </Link>
         </div>
@@ -243,7 +280,7 @@ export default function Navbar() {
 
       {/* Scroll Navigation Bar */}
       {showScrollNav && (
-        <div className="w-full bg-white text-black border-b border-gray-300 shadow-md fixed top-0 z-40">
+        <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-md z-50 animate-fade-down">
           <NavBarContent
             moreOpen={moreOpen}
             setMoreOpen={setMoreOpen}

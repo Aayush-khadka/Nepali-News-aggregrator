@@ -3,211 +3,204 @@
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import Link from "next/link";
 
-// General Links Component (Merged with Legal Links)
-const GeneralLinks = () => (
-  <div className="text-center md:text-left">
-    <h2 className="text-lg font-serif font-semibold mb-4 text-gray-700">
-      General Links
+const FooterSection = ({ title, children }) => (
+  <div className="text-center sm:text-left">
+    <h2 className="text-lg font-serif font-semibold mb-3 sm:mb-4 text-gray-800">
+      {title}
     </h2>
+    {children}
+  </div>
+);
+
+const GeneralLinks = () => (
+  <FooterSection title="General Links">
     <ul className="space-y-2">
       <li>
-        <Link href="/" className="hover:text-red-600 transition duration-200">
+        <Link
+          href="/"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200"
+        >
           Home
         </Link>
       </li>
       <li>
         <Link
           href="/about"
-          className="hover:text-red-600 transition duration-200"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200"
         >
           About
         </Link>
       </li>
     </ul>
-  </div>
+  </FooterSection>
 );
 
-const NewsCategories = () => {
-  return (
-    <div className="text-center md:text-left">
-      <h2 className="text-lg font-serif font-semibold mb-4 text-gray-700">
-        News Categories
-      </h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Link
-            href="/politics"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Politics
-          </Link>
-          <Link
-            href="/world"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            World
-          </Link>
-          <Link
-            href="/business"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Business
-          </Link>
-          <Link
-            href="/sports"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Sports
-          </Link>
-          <Link
-            href="/editorial"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Editorial
-          </Link>
-        </div>
-        <div>
-          <Link
-            href="/health"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Health
-          </Link>
-          <Link
-            href="/science-tech"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Science & Technology
-          </Link>
-          <Link
-            href="/art-culture"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            Art & Culture
-          </Link>
-          <Link
-            href="/national"
-            className="hover:text-red-600 transition duration-200 block mb-2"
-          >
-            National
-          </Link>
-        </div>
+const NewsCategories = () => (
+  <FooterSection title="News Categories">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+      <div className="space-y-2">
+        <Link
+          href="/politics"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Politics
+        </Link>
+        <Link
+          href="/world"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          World
+        </Link>
+        <Link
+          href="/business"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Business
+        </Link>
+        <Link
+          href="/sports"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Sports
+        </Link>
+        <Link
+          href="/editorial"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Editorial
+        </Link>
+      </div>
+      <div className="space-y-2">
+        <Link
+          href="/health"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Health
+        </Link>
+        <Link
+          href="/science-tech"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Science & Tech
+        </Link>
+        <Link
+          href="/art-culture"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Art & Culture
+        </Link>
+        <Link
+          href="/national"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          National
+        </Link>
       </div>
     </div>
-  );
-};
-
-// Contact Information Component
-const ContactInfo = () => (
-  <div className="text-center md:text-left">
-    <h2 className="text-lg font-serif font-semibold mb-4 text-gray-700">
-      Contact Us
-    </h2>
-    <ul className="space-y-2">
-      <li>
-        <p className="text-sm mb-2 text-gray-600">
-          Email:{" "}
-          <a
-            href="mailto:khadkaaayush90@gmail.com"
-            className="hover:text-red-600 transition duration-200"
-          >
-            khadkaaayush90@gmail.com
-          </a>
-        </p>
-      </li>
-      <li>
-        <p className="text-sm text-gray-600">
-          Location: Amrit Marga, Kathmandu, Nepal
-        </p>
-      </li>
-    </ul>
-  </div>
+  </FooterSection>
 );
 
-// Sources Component with Logos
+const ContactInfo = () => (
+  <FooterSection title="Contact Us">
+    <div className="space-y-2">
+      <p className="text-sm text-gray-600">
+        Email:{" "}
+        <a
+          href="mailto:khadkaaayush90@gmail.com"
+          className="hover:text-red-600 transition-colors duration-200"
+        >
+          khadkaaayush90@gmail.com
+        </a>
+      </p>
+      <p className="text-sm text-gray-600">
+        Location: Amrit Marga, Kathmandu, Nepal
+      </p>
+    </div>
+  </FooterSection>
+);
+
 const Sources = () => (
-  <div className="text-center md:text-left">
-    <h2 className="text-lg font-serif font-semibold mb-4 text-gray-700">
-      News Sources
-    </h2>
-    <ul className="space-y-2">
-      <li className="flex items-center justify-center md:justify-start">
+  <FooterSection title="News Sources">
+    <ul className="space-y-3">
+      <li>
         <a
           href="https://kathmandupost.com"
-          className="hover:text-red-600 transition duration-200 flex items-center text-gray-600"
+          className="group flex items-center justify-center sm:justify-start text-gray-600 hover:text-red-600 transition-colors duration-200"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="/k-logo.png" // Path to the logo in the public directory
-            alt="Kathmandu Post"
-            className="h-6 mr-2" // Adjust height as needed
-          />
-          The Kathmandu Post
+          <div className="w-8 h-8 mr-2 overflow-hidden rounded-md border border-gray-200 bg-white">
+            <img
+              src="/k-logo.png"
+              alt="Kathmandu Post"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <span>The Kathmandu Post</span>
         </a>
       </li>
-      <li className="flex items-center justify-center md:justify-start">
+      <li>
         <a
           href="https://risingnepaldaily.com/"
-          className="hover:text-red-600 transition duration-200 flex items-center text-gray-600"
+          className="group flex items-center justify-center sm:justify-start text-gray-600 hover:text-red-600 transition-colors duration-200"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="/rlogo.jpg" // Path to the logo in the public directory
-            alt="The Rising Nepal"
-            className="h-6 mr-2" // Adjust height as needed
-          />
-          The Rising Nepal
+          <div className="w-8 h-8 mr-2 overflow-hidden rounded-md border border-gray-200 bg-white">
+            <img
+              src="/rlogo.jpg"
+              alt="The Rising Nepal"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <span>The Rising Nepal</span>
         </a>
       </li>
-      {/* Add more sources as needed */}
     </ul>
-  </div>
+  </FooterSection>
 );
 
-// Main Footer Component
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white text-black py-12 border-t border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-white text-gray-800 pt-12 pb-6 border-t border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
           <GeneralLinks />
           <NewsCategories />
           <ContactInfo />
           <Sources />
         </div>
 
-        <div className="mt-12 flex flex-col items-center">
-          <div className="flex justify-center space-x-6">
-            <a
-              href="https://github.com/Aayush-khadka/Nepali-News-Aggregrator-Backend"
-              className="hover:text-gray-600 transition duration-200 text-gray-500"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaGithub size={24} />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/aayush-khadka-0513931b0/"
-              className="hover:text-blue-600 transition duration-200 text-blue-500"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaLinkedin size={24} />
-            </a>
+        <div className="mt-12 pt-6 border-t border-gray-100">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="flex items-center space-x-6">
+              <a
+                href="https://github.com/Aayush-khadka/Nepali-News-Aggregrator-Backend"
+                className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaGithub size={22} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/aayush-khadka-0513931b0/"
+                className="text-blue-500 hover:text-blue-600 transition-colors duration-200"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin size={22} />
+              </a>
+            </div>
+            <p className="text-sm text-gray-500">
+              Made with <span className="text-red-500">💛</span> by Aayush
+              Khadka
+            </p>
+            <p className="text-sm text-gray-400 font-serif">
+              &copy; {currentYear} The Samachar. All rights reserved.
+            </p>
           </div>
-          <p className="mt-4 text-sm text-gray-500">
-            Made with <span className="text-blue-500">💛</span> by Aayush Khadka
-          </p>
-        </div>
-
-        <div className="mt-12 border-t border-gray-200 pt-6 text-center">
-          <p className="text-sm font-serif text-gray-500">
-            &copy; {currentYear} The Samachar. All rights reserved.
-          </p>
         </div>
       </div>
     </footer>
