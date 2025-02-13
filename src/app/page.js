@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import Link from "next/link";
 import {
   TrendingUp,
@@ -18,7 +18,7 @@ import {
   Earth,
 } from "lucide-react";
 
-function Toast({ message, onClose }) {
+const Toast = memo(({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
@@ -31,9 +31,9 @@ function Toast({ message, onClose }) {
       {message}
     </div>
   );
-}
+});
 
-export default function HomePage() {
+const HomePage = () => {
   const [featuredArticles, setFeaturedArticles] = useState([]);
   const [trendingArticles, setTrendingArticles] = useState([]);
   const [categoryArticles, setCategoryArticles] = useState({});
@@ -55,29 +55,27 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         const safeFetch = async (url, type) => {
-          try {
-            const response = await fetch(url);
-            if (!response.ok)
-              throw new Error(`HTTP error! status: ${response.status}`);
-            const text = await response.text();
-            try {
-              const data = JSON.parse(text);
-              if (Array.isArray(data)) return data;
-              if (data.data) {
-                if (Array.isArray(data.data)) return data.data;
-                if (data.data.results && Array.isArray(data.data.results))
-                  return data.data.results;
-              }
-              console.warn(
-                `Warning: ${type} response has unexpected structure:`,
-                data
-              );
-              return [];
-            } catch (parseError) {
-              throw new Error(`Invalid JSON in ${type} response`);
-            }
-          } catch (fetchError) {
-            throw new Error(`Failed to fetch ${type}: ${fetchError.message}`);
+          const response = await fetch(url);
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.json();
+          // Ensure the data is an array or return an empty array
+          if (Array.isArray(data)) {
+            return data;
+          } else if (data.data && Array.isArray(data.data)) {
+            return data.data;
+          } else if (
+            data.data &&
+            data.data.results &&
+            Array.isArray(data.data.results)
+          ) {
+            return data.data.results;
+          } else {
+            console.warn(
+              `Warning: ${type} response has unexpected structure:`,
+              data
+            );
+            return [];
           }
         };
 
@@ -99,6 +97,7 @@ export default function HomePage() {
             ),
           ]);
 
+        // Check if featuredData is an array before slicing
         setFeaturedArticles(
           Array.isArray(featuredData) ? featuredData.slice(0, 3) : []
         );
@@ -109,7 +108,7 @@ export default function HomePage() {
         const categoryArticlesMap = {};
         categories.forEach((cat, index) => {
           categoryArticlesMap[cat.slug] = Array.isArray(categoriesData[index])
-            ? categoriesData[index].slice(0, 8) // Show 8 articles per category
+            ? categoriesData[index].slice(0, 8)
             : [];
         });
         setCategoryArticles(categoryArticlesMap);
@@ -136,7 +135,6 @@ export default function HomePage() {
       .writeText(articleUrl)
       .then(() => {
         setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
       })
       .catch((err) => console.error("Failed to copy: ", err));
   };
@@ -149,7 +147,6 @@ export default function HomePage() {
         <div className="w-16 h-16 border-t-4 border-red-600 border-solid rounded-full animate-spin"></div>
       </div>
     );
-
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -168,7 +165,6 @@ export default function HomePage() {
           <span className="bg-gradient-to-r from-red-600 to-red-400 w-2 h-6 sm:h-8 mr-3 sm:mr-4 rounded-full"></span>
           Featured Stories
         </h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {featuredArticles.map((article, index) => (
             <div
@@ -182,6 +178,7 @@ export default function HomePage() {
                   src={article.articleImage}
                   alt={article.title}
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
                   onError={(e) => {
                     e.target.src =
                       "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg";
@@ -192,19 +189,16 @@ export default function HomePage() {
                     <div className="inline-block px-3 py-1 bg-red-600 text-white rounded-full text-sm font-medium mb-3">
                       {article.category || "Featured"}
                     </div>
-
                     <Link href={`/article/${article._id}`}>
                       <h2 className="text-white text-xl lg:text-2xl font-bold mb-3 hover:text-red-400 transition-colors line-clamp-2">
                         {article.title}
                       </h2>
                     </Link>
-
                     {index === 0 && article.description && (
                       <p className="text-gray-200 mb-4 line-clamp-2 text-sm lg:text-base">
                         {article.description}
                       </p>
                     )}
-
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-200 text-xs sm:text-sm">
                         <div className="flex items-center">
@@ -220,7 +214,6 @@ export default function HomePage() {
                           </span>
                         </div>
                       </div>
-
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                         <button
                           onClick={(e) => {
@@ -255,9 +248,7 @@ export default function HomePage() {
             Trending Now
           </h2>
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
-          {/* Main Trending Article - Takes up 3 columns on large screens */}
           {trendingArticles.slice(0, 1).map((article) => (
             <Link
               key={article._id}
@@ -269,6 +260,7 @@ export default function HomePage() {
                   src={article.articleImage}
                   alt={article.title}
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
                   onError={(e) => {
                     e.target.src =
                       "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg";
@@ -302,8 +294,6 @@ export default function HomePage() {
               </div>
             </Link>
           ))}
-
-          {/* Other Trending Articles - Takes up 2 columns on large screens */}
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
             {trendingArticles.slice(1, 5).map((article, index) => (
               <Link key={article._id} href={`/article/${article._id}`}>
@@ -372,6 +362,7 @@ export default function HomePage() {
                       src={article.articleImage}
                       alt={article.title}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
                       onError={(e) => {
                         e.target.src =
                           "https://res.cloudinary.com/dbdyrmfbc/image/upload/v1738399320/qxh5ezn8rcalsj2cwalw.jpg";
@@ -413,4 +404,6 @@ export default function HomePage() {
       )}
     </div>
   );
-}
+};
+
+export default HomePage;

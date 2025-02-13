@@ -1,37 +1,47 @@
 {
-    "name": "The Samachar - Nepali News Aggregator",
-    "short_name": "The Samachar",
-    "form_factor": ["wide", "narrow", "tall"],
-
-    "icons": [
-      {
-        "src": "/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "/android-chrome-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "start_url": "/",
-    "scope": "/",
-    "description": "Stay updated with the latest Nepali news from leading sources.",
-    "categories": [
-      "news",
-      "nepal",
-      "nepali news",
-      "news aggregator",
-      "politics",
-      "business",
-      "sports",
-      "culture",
-      "local news",
-      "world news"
-    ]
-  }
-  
+  "name": "The Samachar - Nepali News Aggregator",
+  "short_name": "The Samachar",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "description": "Stay updated with the latest Nepali news from leading sources.",
+  "categories": [
+    "news",
+    "nepal",
+    "nepali news",
+    "news aggregator",
+    "politics",
+    "business",
+    "sports",
+    "culture",
+    "local news",
+    "world news"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "640x1136",
+      "type": "image/png"
+    }
+  ]
+}
