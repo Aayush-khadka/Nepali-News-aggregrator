@@ -1,6 +1,8 @@
 {
     "name": "The Samachar - Nepali News Aggregator",
     "short_name": "The Samachar",
+    "form_factor": ["wide", "narrow", "tall"],
+
     "icons": [
       {
         "src": "/android-chrome-192x192.png",
