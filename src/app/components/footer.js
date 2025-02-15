@@ -95,6 +95,18 @@ const NewsCategories = () => (
         >
           National
         </Link>
+        <Link
+          href="/investigations"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Investigations
+        </Link>
+        <Link
+          href="/climate-enviroment"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+        >
+          Climate and Enviroment
+        </Link>
       </div>
     </div>
   </FooterSection>
