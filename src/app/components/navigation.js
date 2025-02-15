@@ -397,8 +397,9 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
   ];
 
   const moreItems = [
+    { name: "Investigations", path: "/investigations" },
+    { name: "Climatate & Enviroment", path: "/climate-enviroment" },
     { name: "Editorial", path: "/editorial" },
-    // Future items can be added here
   ];
 
   const handleSearchSubmit = (event) => {
@@ -599,7 +600,7 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
             </h3>
             <p className="text-gray-600 mb-4">
               Install our app on your device for quick access to the latest
-              news, even offline!
+              news.
             </p>
             <div className="flex gap-3">
               <button
