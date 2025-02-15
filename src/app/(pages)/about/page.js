@@ -76,7 +76,7 @@ const AboutPage = () => {
   const stats = [
     { number: articleCount, label: "Articles Available" },
     { number: "2", label: "News Sources" },
-    { number: "10", label: "Categories" },
+    { number: "10+", label: "Categories" },
     { number: "24/7", label: "Updates" },
   ];
 
