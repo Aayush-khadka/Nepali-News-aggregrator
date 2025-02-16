@@ -314,35 +314,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Creator Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-red-50 to-white rounded-2xl shadow-sm p-8 md:p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Built with <Heart className="w-6 h-6 text-red-600 inline" /> by
-              Aayush Khadka
-            </h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
-              The Samachar is a personal project created to make Nepali news
-              more accessible to English-speaking readers, built using modern
-              web technologies.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <Link
-                href="https://github.com/Aayush-khadka/Nepali-News-Aggregrator-Backend"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors duration-300"
-              >
-                <Github className="w-5 h-5" />
-                <span>View on GitHub</span>
-                <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="py-16 text-center bg-red-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
