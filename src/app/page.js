@@ -86,7 +86,7 @@ const HomePage = () => {
               "featured"
             ),
             safeFetch(
-              "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending",
+              "https://nepali-news-aggregrator-backend.vercel.app/api/v1/trending",
               "trending"
             ),
             ...categories.map((cat) =>
