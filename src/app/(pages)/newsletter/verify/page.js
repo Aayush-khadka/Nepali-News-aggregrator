@@ -5,35 +5,38 @@ import { useSearchParams } from "next/navigation";
 
 const EmailVerifiedPage = () => {
   const [verificationStatus, setVerificationStatus] = useState("verifying");
+  const [message, setMessage] = useState("");
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
   useEffect(() => {
     if (!token) {
       setVerificationStatus("error");
+      setMessage("Token is missing.");
       return;
     }
 
     const verifyEmail = async () => {
       try {
-        // Update the URL to match the new verification URL
         const response = await fetch(
           `https://thesamachar.vercel.app/newsletter/verify?token=${token}`
         );
 
-        if (!response.ok) {
-          throw new Error("Verification failed");
-        }
-
         const data = await response.json();
-        if (data.success) {
+
+        if (response.ok && data.success) {
           setVerificationStatus("success");
+          setMessage(
+            data.message || "Your email has been successfully verified."
+          );
         } else {
           setVerificationStatus("error");
+          setMessage(data.message || "Verification failed.");
         }
       } catch (error) {
         console.error("Error verifying email:", error);
         setVerificationStatus("error");
+        setMessage("Failed to verify email. Please try again later.");
       }
     };
 
@@ -58,9 +61,7 @@ const EmailVerifiedPage = () => {
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               Email Verified
             </h1>
-            <p className="text-gray-600">
-              Your email has been successfully verified.
-            </p>
+            <p className="text-gray-600">{message}</p>
           </>
         )}
         {verificationStatus === "error" && (
@@ -68,9 +69,7 @@ const EmailVerifiedPage = () => {
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               Verification Failed
             </h1>
-            <p className="text-gray-600">
-              The verification link is invalid or has expired. Please try again.
-            </p>
+            <p className="text-gray-600">{message}</p>
           </>
         )}
       </div>
