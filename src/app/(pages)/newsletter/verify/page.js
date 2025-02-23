@@ -17,7 +17,7 @@ const EmailVerifiedPage = () => {
     const verifyEmail = async () => {
       try {
         const response = await fetch(
-          `https://thesamachar.vercel.app/api/v1/newsletter/verify?token=${token}`
+          `https://nepali-news-aggregrator-backend.vercel.app/api/v1/newsletter/verify?token=${token}`
         );
 
         if (!response.ok) {
