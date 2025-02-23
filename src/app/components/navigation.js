@@ -69,8 +69,9 @@
 //   ];
 
 //   const moreItems = [
+//     { name: "Investigations", path: "/investigations" },
+//     { name: "Climatate & Enviroment", path: "/climate-enviroment" },
 //     { name: "Editorial", path: "/editorial" },
-//     // Future items can be added here
 //   ];
 
 //   const handleSearchSubmit = (event) => {
@@ -84,7 +85,7 @@
 //   return (
 //     <nav className="relative px-4 py-2 font-serif bg-white">
 //       <div className="flex justify-between items-center max-w-7xl mx-auto">
-//         {/* Logo for Mobile */}
+//         {/* Logo and Install Button for Mobile */}
 //         <div className="lg:hidden flex items-center gap-2">
 //           {deferredPrompt && (
 //             <button
@@ -261,6 +262,35 @@
 //           </div>
 //         </div>
 //       )}
+
+//       {/* Install PWA Popup */}
+//       {showInstallPopup && (
+//         <div className="fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center">
+//           <div className="bg-white rounded-lg p-6 mx-4 max-w-sm w-full shadow-xl">
+//             <h3 className="text-lg font-semibold text-gray-900 mb-2">
+//               Install The Samachar
+//             </h3>
+//             <p className="text-gray-600 mb-4">
+//               Install our app on your device for quick access to the latest
+//               news.
+//             </p>
+//             <div className="flex gap-3">
+//               <button
+//                 onClick={() => setShowInstallPopup(false)}
+//                 className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+//               >
+//                 Cancel
+//               </button>
+//               <button
+//                 onClick={handleInstallConfirm}
+//                 className="flex-1 px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+//               >
+//                 Install
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
 //     </nav>
 //   );
 // };
@@ -339,6 +369,8 @@ import {
   ChevronRight,
   ChevronDown,
   Download,
+  Bell,
+  Newspaper,
 } from "lucide-react";
 
 const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
@@ -398,7 +430,7 @@ const NavBarContent = ({ moreOpen, setMoreOpen, moreRef }) => {
 
   const moreItems = [
     { name: "Investigations", path: "/investigations" },
-    { name: "Climatate & Enviroment", path: "/climate-enviroment" },
+    { name: "Climate & Environment", path: "/climate-environment" },
     { name: "Editorial", path: "/editorial" },
   ];
 
@@ -653,13 +685,24 @@ export default function Navbar() {
       {/* Main Header */}
       <header className="w-full bg-white text-black border-b border-gray-200">
         {/* Title Section */}
-        <div className="text-center py-4 sm:py-6 border-b border-gray-100">
-          <Link
-            href="/"
-            className="text-3xl sm:text-4xl font-serif font-bold hover:text-red-600 transition-colors tracking-tight"
-          >
-            The Samachar
-          </Link>
+        <div className="relative max-w-7xl mx-auto px-4 py-4 sm:py-6 border-b border-gray-100">
+          <div className="flex justify-between items-center">
+            <div className="flex-1">{/* Empty div for layout balance */}</div>
+            <Link
+              href="/"
+              className="text-3xl sm:text-4xl font-serif font-bold hover:text-red-600 transition-colors tracking-tight"
+            >
+              The Samachar
+            </Link>
+            <div className="flex-1 flex justify-end">
+              <Link href="/newsletter">
+                <button className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors flex items-center gap-2 text-sm font-medium">
+                  <Newspaper className="w-4 h-4" />
+                  <span>Join Our Newsletter</span>
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Navigation Bar */}
