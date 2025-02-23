@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const EmailVerifiedPage = () => {
-  const [verificationStatus, setVerificationStatus] = useState("verifying"); // States: verifying, success, error
+  const [verificationStatus, setVerificationStatus] = useState("verifying");
   const searchParams = useSearchParams();
-  const token = searchParams.get("token"); // Extract the token from the URL
+  const token = searchParams.get("token");
 
   useEffect(() => {
     if (!token) {
