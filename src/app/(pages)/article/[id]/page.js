@@ -61,7 +61,7 @@ export default function NewsStyleArticlePage({ params }) {
           `https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/get-article/${id}`
         );
         const trendingResponse = await fetch(
-          `https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending`
+          `https://nepali-news-aggregrator-backend.vercel.app/api/v1/trending`
         );
         const relatedResponse = await fetch(
           `https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/get-latest-articles`

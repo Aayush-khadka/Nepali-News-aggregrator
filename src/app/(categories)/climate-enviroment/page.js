@@ -49,7 +49,7 @@ export default function CategoryPage() {
             "https://nepali-news-aggregrator-backend.vercel.app/api/v1/category/climate-enviroment"
           ),
           fetch(
-            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending"
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/trending"
           ),
         ]);
 

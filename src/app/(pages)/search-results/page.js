@@ -224,7 +224,7 @@ const SearchResults = () => {
             `https://nepali-news-aggregrator-backend.vercel.app/api/v1/search?q=${query}`
           ),
           fetch(
-            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/articles/trending"
+            "https://nepali-news-aggregrator-backend.vercel.app/api/v1/trending"
           ),
         ]);
 
