@@ -92,7 +92,7 @@
 // };
 
 // export default EmailVerifiedPage;
-
+"use client";
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Newspaper, CheckCircle, XCircle, Loader } from "lucide-react";
