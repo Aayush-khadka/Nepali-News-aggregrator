@@ -346,7 +346,7 @@ export default function Navbar() {
 
             {/* Right section */}
             <div className="flex-1 flex justify-end">
-              <Link href="/newsletter">
+              <Link href="/newsletter/signup">
                 <button className="group relative inline-flex items-center justify-center">
                   {/* Mobile view */}
                   <div className="sm:hidden flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors">
