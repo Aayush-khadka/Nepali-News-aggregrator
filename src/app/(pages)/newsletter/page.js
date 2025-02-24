@@ -1,264 +1,267 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Globe,
-  Earth,
-  Briefcase,
-  Newspaper,
-  Volleyball,
-  Check,
-  LoaderCircle,
-  Mail,
-  AlertCircle,
-  CheckCircle2,
+  Calendar,
+  Filter,
+  ChevronRight,
+  Loader2,
+  BookOpen,
+  Share2,
+  ArrowLeft,
 } from "lucide-react";
 
-const NewsletterSignup = () => {
-  const [email, setEmail] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [success, setSuccess] = useState(false);
+const NewsletterPage = () => {
+  const [newsletters, setNewsletters] = useState([]);
+  const [groupedNewsletters, setGroupedNewsletters] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [readingTime, setReadingTime] = useState({});
+
+  useEffect(() => {
+    const fetchNewsletters = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:4000/api/v1/newsletter/newsletter"
+        );
+        if (!response.ok) throw new Error("Failed to fetch newsletters");
+        const data = await response.json();
+
+        const grouped = data.data.reduce((acc, newsletter) => {
+          const date = newsletter.date;
+          if (!acc[date]) acc[date] = [];
+          acc[date].push(newsletter);
+          return acc;
+        }, {});
+
+        const readingTimes = {};
+        data.data.forEach((newsletter) => {
+          const wordCount = newsletter.newsletter.split(/\s+/).length;
+          const timeInMinutes = Math.ceil(wordCount / 200);
+          readingTimes[newsletter._id] = timeInMinutes;
+        });
+
+        setReadingTime(readingTimes);
+        setGroupedNewsletters(grouped);
+        setNewsletters(data.data);
+        const mostRecentDate = Object.keys(grouped).sort(
+          (a, b) => new Date(b) - new Date(a)
+        )[0];
+        setSelectedDate(mostRecentDate);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNewsletters();
+  }, []);
 
   const categories = [
-    { name: "Politics", icon: Globe, slug: "politics" },
-    { name: "World", icon: Earth, slug: "world" },
-    { name: "Business", icon: Briefcase, slug: "business" },
-    { name: "National", icon: Newspaper, slug: "national" },
-    { name: "Sports", icon: Volleyball, slug: "sports" },
+    { id: "all", name: "All Categories", icon: "📰", color: "gray" },
+    { id: "sports", name: "Sports", icon: "🏃‍♂️", color: "blue" },
+    { id: "opinion", name: "Opinion", icon: "💭", color: "purple" },
+    { id: "art-culture", name: "Art & Culture", icon: "🎨", color: "pink" },
   ];
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email) {
-      setEmailError("Email is required");
-      return false;
-    }
-    if (!emailRegex.test(email)) {
-      setEmailError("Please enter a valid email address");
-      return false;
-    }
-    setEmailError("");
-    return true;
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
-  const toggleCategory = (slug) => {
-    setSelectedCategories((prev) =>
-      prev.includes(slug) ? prev.filter((id) => id !== slug) : [...prev, slug]
-    );
+  const filterNewsletters = (newsletters) => {
+    return newsletters.filter((newsletter) => {
+      const matchesCategory =
+        activeCategory === "all" || newsletter.category === activeCategory;
+      return matchesCategory;
+    });
   };
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (emailError) validateEmail(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (!validateEmail(email)) {
-      return;
-    }
-
-    if (selectedCategories.length === 0) {
-      setError("Please select at least one category");
-      return;
-    }
-
-    setIsLoading(true);
-
+  const handleShare = async (newsletter) => {
     try {
-      const response = await fetch(
-        "https://nepali-news-aggregrator-backend.vercel.app/api/v1/newsletter/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            interests: selectedCategories,
-          }),
-        }
-      );
-
-      const rawResponse = await response.text();
-      const contentType = response.headers.get("Content-Type");
-      let data;
-
-      if (contentType && contentType.includes("application/json")) {
-        data = JSON.parse(rawResponse);
-      } else {
-        throw new Error("Invalid response from server. Please try again.");
-      }
-
-      if (!response.ok) {
-        setError(data?.message || "Failed to sign up. Please try again.");
-        return;
-      }
-
-      setSuccess(true);
+      await navigator.share({
+        title: `Newsletter - ${formatDate(newsletter.date)}`,
+        text: newsletter.newsletter.substring(0, 100) + "...",
+        url: window.location.href,
+      });
     } catch (err) {
-      console.error("Signup error:", err);
-      setError(err.message || "Something went wrong. Please try again later.");
-    } finally {
-      setIsLoading(false);
+      console.log("Sharing failed:", err);
     }
   };
 
-  if (success) {
+  if (isLoading) {
     return (
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <div className="bg-gradient-to-br from-white to-red-50 rounded-xl shadow-lg p-8">
-          <div className="mb-8 text-center">
-            <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-red-200">
-              <CheckCircle2 className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              Almost there!
-            </h2>
-            <p className="text-gray-600">
-              Please verify your email address to complete the subscription
-            </p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-12 h-12 text-red-600 animate-spin" />
+      </div>
+    );
+  }
 
-          <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Mail className="w-5 h-5 text-red-500" />
-              <p className="font-medium text-gray-800">
-                Verification email sent to:
-              </p>
-            </div>
-            <p className="text-red-600 font-medium break-all bg-red-50 p-3 rounded-lg">
-              {email}
-            </p>
-          </div>
-
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" />
-              Next steps:
-            </h3>
-            <ol className="text-sm text-blue-700 space-y-2 ml-6 list-decimal">
-              <li>Check your email inbox</li>
-              <li>Click the verification link in the email</li>
-              <li>Start receiving news updates based on your interests!</li>
-            </ol>
-          </div>
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-red-50 p-8 rounded-xl text-red-600 max-w-md mx-4">
+          <h3 className="text-2xl font-bold mb-3">
+            Unable to Load Newsletters
+          </h3>
+          <p className="text-red-700">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8">
-      <div className="bg-gradient-to-br from-white to-red-50 rounded-xl shadow-lg overflow-hidden">
-        <div className="p-6">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="bg-gradient-to-br from-red-500 to-red-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg shadow-red-200">
-              <Mail className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-1">
-                Stay Updated
-              </h2>
-              <p className="text-sm text-gray-600">
-                Get the latest news in your inbox
-              </p>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-800 mb-1.5"
-              >
-                Email Address
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={handleEmailChange}
-                  onBlur={() => validateEmail(email)}
-                  className={`w-full px-4 py-3 text-gray-800 placeholder-gray-400 bg-white rounded-lg border ${
-                    emailError
-                      ? "border-red-400 focus:ring-red-100"
-                      : "border-gray-200 focus:border-red-400 focus:ring-red-100"
-                  } outline-none transition-all shadow-sm`}
-                />
-                {emailError && (
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <AlertCircle className="h-5 w-5 text-red-500" />
-                  </div>
-                )}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar */}
+          <div
+            className={`
+            lg:w-72 space-y-8
+            fixed lg:relative inset-0 z-40 bg-white lg:bg-transparent
+            transform lg:transform-none transition-transform duration-300 ease-in-out
+            ${
+              isSidebarOpen
+                ? "translate-x-0"
+                : "-translate-x-full lg:translate-x-0"
+            }
+            overflow-y-auto lg:overflow-visible
+            p-4 lg:p-0
+          `}
+          >
+            {/* Archives */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-lg font-semibold mb-6 flex items-center gap-2 text-gray-900">
+                <Calendar className="h-5 w-5 text-red-600" />
+                Archives
+              </h3>
+              <div className="space-y-2">
+                {Object.keys(groupedNewsletters)
+                  .sort((a, b) => new Date(b) - new Date(a))
+                  .map((date) => (
+                    <button
+                      key={date}
+                      onClick={() => {
+                        setSelectedDate(date);
+                        setIsSidebarOpen(false);
+                      }}
+                      className={`
+                        w-full px-4 py-3 rounded-lg text-left
+                        transition-all duration-200 
+                        ${
+                          selectedDate === date
+                            ? "bg-red-50 text-red-600 font-medium ring-1 ring-red-100"
+                            : "hover:bg-gray-50 text-gray-700"
+                        }
+                      `}
+                    >
+                      {formatDate(date)}
+                    </button>
+                  ))}
               </div>
-              {emailError && (
-                <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
-                  <AlertCircle className="h-4 w-4" />
-                  {emailError}
-                </p>
-              )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-800 mb-2">
-                Select Your Interests
-              </label>
-              <div className="grid grid-cols-2 gap-2">
+            {/* Categories */}
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-lg font-semibold mb-6 flex items-center gap-2 text-gray-900">
+                <Filter className="h-5 w-5 text-red-600" />
+                Categories
+              </h3>
+              <div className="space-y-2">
                 {categories.map((category) => (
                   <button
-                    key={category.slug}
-                    type="button"
-                    onClick={() => toggleCategory(category.slug)}
-                    className={`flex items-center gap-2 p-3 rounded-lg border text-sm transition-all ${
-                      selectedCategories.includes(category.slug)
-                        ? "border-red-200 bg-white text-red-600 shadow-sm"
-                        : "border-gray-200 hover:border-red-200 hover:bg-white text-gray-700"
-                    }`}
+                    key={category.id}
+                    onClick={() => {
+                      setActiveCategory(category.id);
+                      setIsSidebarOpen(false);
+                    }}
+                    className={`
+                      w-full px-4 py-3 rounded-lg text-left flex items-center gap-3
+                      transition-all duration-200 
+                      ${
+                        activeCategory === category.id
+                          ? "bg-red-50 text-red-600 font-medium ring-1 ring-red-100"
+                          : "hover:bg-gray-50 text-gray-700"
+                      }
+                    `}
                   >
-                    <category.icon className="w-4 h-4" />
-                    <span className="font-medium">{category.name}</span>
+                    <span className="text-lg">{category.icon}</span>
+                    <span>{category.name}</span>
+                    {activeCategory === category.id && (
+                      <ChevronRight className="ml-auto h-4 w-4" />
+                    )}
                   </button>
                 ))}
               </div>
             </div>
+          </div>
 
-            {error && (
-              <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                <span>{error}</span>
+          {/* Overlay */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+          )}
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {selectedDate && (
+              <div className="space-y-8">
+                {filterNewsletters(groupedNewsletters[selectedDate]).map(
+                  (newsletter) => (
+                    <article
+                      key={newsletter._id}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-200"
+                    >
+                      <div className="p-8">
+                        <div className="flex flex-wrap items-center gap-4 mb-8">
+                          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-red-50 text-red-600">
+                            {
+                              categories.find(
+                                (c) => c.id === newsletter.category
+                              )?.icon
+                            }
+                            <span className="ml-2 capitalize">
+                              {newsletter.category.replace(/-/g, " ")}
+                            </span>
+                          </span>
+
+                          <button
+                            onClick={() => handleShare(newsletter)}
+                            className="ml-auto p-2 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                          ></button>
+                        </div>
+                        <div className="prose prose-lg max-w-none">
+                          {newsletter.newsletter
+                            .split("\n\n")
+                            .map((paragraph, idx) => (
+                              <p
+                                key={idx}
+                                className="text-gray-700 leading-relaxed mb-6 last:mb-0"
+                              >
+                                {paragraph.trim()}
+                              </p>
+                            ))}
+                        </div>
+                      </div>
+                    </article>
+                  )
+                )}
               </div>
             )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center disabled:opacity-70 shadow-sm"
-            >
-              {isLoading ? (
-                <>
-                  <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
-                  Signing Up...
-                </>
-              ) : (
-                "Subscribe to Newsletter"
-              )}
-            </button>
-          </form>
-        </div>
-
-        <div className="bg-white/50 backdrop-blur-sm px-6 py-3 text-center text-xs text-gray-600">
-          By subscribing, you agree to our Terms of Service and Privacy Policy
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default NewsletterSignup;
+export default NewsletterPage;
