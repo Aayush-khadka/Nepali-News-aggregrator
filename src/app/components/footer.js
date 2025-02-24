@@ -31,6 +31,14 @@ const GeneralLinks = () => (
           About
         </Link>
       </li>
+      <li>
+        <Link
+          href="/newsletter"
+          className="text-gray-600 hover:text-red-600 transition-colors duration-200"
+        >
+          Newsletter
+        </Link>
+      </li>
     </ul>
   </FooterSection>
 );
