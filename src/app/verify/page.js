@@ -272,7 +272,7 @@ const VerificationComponent = () => {
                   <span>Homepage</span>
                 </a>
                 <a
-                  href="/newsletters"
+                  href="/newsletter"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-red-600 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300 shadow-md w-full sm:w-auto"
                 >
                   <BookOpen size={18} />
