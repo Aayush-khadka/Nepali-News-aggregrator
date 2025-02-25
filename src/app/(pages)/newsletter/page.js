@@ -16,7 +16,7 @@ const NewsletterPage = () => {
     const fetchNewsletters = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/v1/newsletter/newsletter"
+          "https://nepali-news-aggregrator-backend.vercel.app/api/v1/newsletter/newsletter"
         );
         if (!response.ok) throw new Error("Failed to fetch newsletters");
         const data = await response.json();
