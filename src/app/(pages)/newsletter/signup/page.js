@@ -11,6 +11,13 @@ import {
   Mail,
   AlertCircle,
   CheckCircle2,
+  Trophy,
+  DollarSign,
+  Heart,
+  Mountain,
+  Microscope,
+  MessageSquare,
+  Palette,
 } from "lucide-react";
 
 const NewsletterSignup = () => {
@@ -26,7 +33,17 @@ const NewsletterSignup = () => {
     { name: "World", icon: Earth, slug: "world" },
     { name: "Business", icon: Briefcase, slug: "business" },
     { name: "National", icon: Newspaper, slug: "national" },
-    { name: "Sports", icon: Volleyball, slug: "sports" },
+    { name: "Sports", icon: Trophy, slug: "sports" },
+    { name: "Money", icon: DollarSign, slug: "money" },
+    { name: "Health", icon: Heart, slug: "health" },
+    { name: "Valley", icon: Mountain, slug: "valley" },
+    {
+      name: "Science & Technology",
+      icon: Microscope,
+      slug: "science-technology",
+    },
+    { name: "Opinion", icon: MessageSquare, slug: "opinion" },
+    { name: "Art & Culture", icon: Palette, slug: "art-culture" },
   ];
 
   const validateEmail = (email) => {
@@ -136,12 +153,12 @@ const NewsletterSignup = () => {
             </p>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
+          <div className="bg-red-50 rounded-lg p-4">
+            <h3 className="font-medium text-red-800 mb-2 flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               Next steps:
             </h3>
-            <ol className="text-sm text-blue-700 space-y-2 ml-6 list-decimal">
+            <ol className="text-sm text-red-700 space-y-2 ml-6 list-decimal">
               <li>Check your email inbox</li>
               <li>Click the verification link in the email</li>
               <li>Start receiving news updates based on your interests!</li>
