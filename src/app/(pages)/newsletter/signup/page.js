@@ -42,7 +42,6 @@ const NewsletterSignup = () => {
       icon: Microscope,
       slug: "science-technology",
     },
-    { name: "Opinion", icon: MessageSquare, slug: "opinion" },
     { name: "Art & Culture", icon: Palette, slug: "art-culture" },
   ];
 
